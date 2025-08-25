@@ -1,0 +1,162 @@
+/**
+ * MCP Server function for Retrieves a list of resources of the specified type that have been analyzed by the specified analyzer..
+ */
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.*;
+import java.util.function.Function;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
+
+class Post_Analyzed_ResourceMCPTool {
+    
+    public static Function<MCPServer.MCPRequest, MCPServer.MCPToolResult> getPost_Analyzed_ResourceHandler(MCPServer.APIConfig config) {
+        return (request) -> {
+            try {
+                Map<String, Object> args = request.getArguments();
+                if (args == null) {
+                    return new MCPServer.MCPToolResult("Invalid arguments object", true);
+                }
+                
+                List<String> queryParams = new ArrayList<>();
+        if (args.containsKey("X-Amz-Content-Sha256")) {
+            queryParams.add("X-Amz-Content-Sha256=" + args.get("X-Amz-Content-Sha256"));
+        }
+        if (args.containsKey("X-Amz-Date")) {
+            queryParams.add("X-Amz-Date=" + args.get("X-Amz-Date"));
+        }
+        if (args.containsKey("X-Amz-Algorithm")) {
+            queryParams.add("X-Amz-Algorithm=" + args.get("X-Amz-Algorithm"));
+        }
+        if (args.containsKey("X-Amz-Credential")) {
+            queryParams.add("X-Amz-Credential=" + args.get("X-Amz-Credential"));
+        }
+        if (args.containsKey("X-Amz-Security-Token")) {
+            queryParams.add("X-Amz-Security-Token=" + args.get("X-Amz-Security-Token"));
+        }
+        if (args.containsKey("X-Amz-Signature")) {
+            queryParams.add("X-Amz-Signature=" + args.get("X-Amz-Signature"));
+        }
+        if (args.containsKey("X-Amz-SignedHeaders")) {
+            queryParams.add("X-Amz-SignedHeaders=" + args.get("X-Amz-SignedHeaders"));
+        }
+        if (args.containsKey("maxResults")) {
+            queryParams.add("maxResults=" + args.get("maxResults"));
+        }
+        if (args.containsKey("nextToken")) {
+            queryParams.add("nextToken=" + args.get("nextToken"));
+        }
+        if (args.containsKey("resourceType")) {
+            queryParams.add("resourceType=" + args.get("resourceType"));
+        }
+        if (args.containsKey("analyzerArn")) {
+            queryParams.add("analyzerArn=" + args.get("analyzerArn"));
+        }
+                
+                String queryString = queryParams.isEmpty() ? "" : "?" + String.join("&", queryParams);
+                String url = config.getBaseUrl() + "/api/v2/post_analyzed_resource" + queryString;
+                
+                HttpClient client = HttpClient.newHttpClient();
+                HttpRequest httpRequest = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("Authorization", "Bearer " + config.getApiKey())
+                    .header("Accept", "application/json")
+                    .GET()
+                    .build();
+                
+                HttpResponse<String> response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+                
+                if (response.statusCode() >= 400) {
+                    return new MCPServer.MCPToolResult("API error: " + response.body(), true);
+                }
+                
+                // Pretty print JSON
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode jsonNode = mapper.readTree(response.body());
+                String prettyJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonNode);
+                
+                return new MCPServer.MCPToolResult(prettyJson);
+                
+            } catch (IOException | InterruptedException e) {
+                return new MCPServer.MCPToolResult("Request failed: " + e.getMessage(), true);
+            } catch (Exception e) {
+                return new MCPServer.MCPToolResult("Unexpected error: " + e.getMessage(), true);
+            }
+        };
+    }
+    
+    public static MCPServer.Tool createPost_Analyzed_ResourceTool(MCPServer.APIConfig config) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("type", "object");
+        Map<String, Object> properties = new HashMap<>();
+        Map<String, Object> X-Amz-Content-Sha256Property = new HashMap<>();
+        X-Amz-Content-Sha256Property.put("type", "string");
+        X-Amz-Content-Sha256Property.put("required", false);
+        X-Amz-Content-Sha256Property.put("description", "");
+        properties.put("X-Amz-Content-Sha256", X-Amz-Content-Sha256Property);
+        Map<String, Object> X-Amz-DateProperty = new HashMap<>();
+        X-Amz-DateProperty.put("type", "string");
+        X-Amz-DateProperty.put("required", false);
+        X-Amz-DateProperty.put("description", "");
+        properties.put("X-Amz-Date", X-Amz-DateProperty);
+        Map<String, Object> X-Amz-AlgorithmProperty = new HashMap<>();
+        X-Amz-AlgorithmProperty.put("type", "string");
+        X-Amz-AlgorithmProperty.put("required", false);
+        X-Amz-AlgorithmProperty.put("description", "");
+        properties.put("X-Amz-Algorithm", X-Amz-AlgorithmProperty);
+        Map<String, Object> X-Amz-CredentialProperty = new HashMap<>();
+        X-Amz-CredentialProperty.put("type", "string");
+        X-Amz-CredentialProperty.put("required", false);
+        X-Amz-CredentialProperty.put("description", "");
+        properties.put("X-Amz-Credential", X-Amz-CredentialProperty);
+        Map<String, Object> X-Amz-Security-TokenProperty = new HashMap<>();
+        X-Amz-Security-TokenProperty.put("type", "string");
+        X-Amz-Security-TokenProperty.put("required", false);
+        X-Amz-Security-TokenProperty.put("description", "");
+        properties.put("X-Amz-Security-Token", X-Amz-Security-TokenProperty);
+        Map<String, Object> X-Amz-SignatureProperty = new HashMap<>();
+        X-Amz-SignatureProperty.put("type", "string");
+        X-Amz-SignatureProperty.put("required", false);
+        X-Amz-SignatureProperty.put("description", "");
+        properties.put("X-Amz-Signature", X-Amz-SignatureProperty);
+        Map<String, Object> X-Amz-SignedHeadersProperty = new HashMap<>();
+        X-Amz-SignedHeadersProperty.put("type", "string");
+        X-Amz-SignedHeadersProperty.put("required", false);
+        X-Amz-SignedHeadersProperty.put("description", "");
+        properties.put("X-Amz-SignedHeaders", X-Amz-SignedHeadersProperty);
+        Map<String, Object> maxResultsProperty = new HashMap<>();
+        maxResultsProperty.put("type", "string");
+        maxResultsProperty.put("required", false);
+        maxResultsProperty.put("description", "Pagination limit");
+        properties.put("maxResults", maxResultsProperty);
+        Map<String, Object> nextTokenProperty = new HashMap<>();
+        nextTokenProperty.put("type", "string");
+        nextTokenProperty.put("required", false);
+        nextTokenProperty.put("description", "Pagination token");
+        properties.put("nextToken", nextTokenProperty);
+        Map<String, Object> resourceTypeProperty = new HashMap<>();
+        resourceTypeProperty.put("type", "string");
+        resourceTypeProperty.put("required", false);
+        resourceTypeProperty.put("description", "Input parameter: The type of resource.");
+        properties.put("resourceType", resourceTypeProperty);
+        Map<String, Object> analyzerArnProperty = new HashMap<>();
+        analyzerArnProperty.put("type", "string");
+        analyzerArnProperty.put("required", true);
+        analyzerArnProperty.put("description", "Input parameter: The <a href=\"https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-getting-started.html#permission-resources\">ARN of the analyzer</a> to retrieve a list of analyzed resources from.");
+        properties.put("analyzerArn", analyzerArnProperty);
+        parameters.put("properties", properties);
+        
+        MCPServer.ToolDefinition definition = new MCPServer.ToolDefinition(
+            "post_analyzed_resource",
+            "Retrieves a list of resources of the specified type that have been analyzed by the specified analyzer..",
+            parameters
+        );
+        
+        return new MCPServer.Tool(definition, getPost_Analyzed_ResourceHandler(config));
+    }
+    
+}
