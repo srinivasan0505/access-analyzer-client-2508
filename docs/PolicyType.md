@@ -1,0 +1,15 @@
+
+
+# PolicyType
+
+## Enum
+
+
+* `IDENTITY_POLICY` (value: `"IDENTITY_POLICY"`)
+
+* `RESOURCE_POLICY` (value: `"RESOURCE_POLICY"`)
+
+* `SERVICE_CONTROL_POLICY` (value: `"SERVICE_CONTROL_POLICY"`)
+
+
+
